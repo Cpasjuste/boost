@@ -26,10 +26,24 @@
 #else
 # include <errno.h>
 # include <fcntl.h>
+#ifndef __SWITCH__
 # include <sys/mman.h>      // mmap, munmap.
+#endif
 # include <sys/stat.h>
 # include <sys/types.h>     // struct stat.
 # include <unistd.h>        // sysconf.
+#endif
+
+#ifdef __SWITCH__
+#define PROT_READ       0x1
+#define PROT_WRITE      0x2
+#define MAP_SHARED      0x01
+#define MAP_FAILED      ((void *) -1)
+#define mmap(a, b, c, d, e, f) malloc(b)
+static int munmap(void *addr, size_t length) {
+    if(addr) free(addr);
+    return 0;
+}
 #endif
 
 namespace boost { namespace iostreams {

@@ -2168,6 +2168,10 @@ void last_write_time(const path& p, const std::time_t new_time, system::error_co
 
   struct timespec times[2] = {};
 
+#ifdef __SWITCH__
+#define UTIME_OMIT ((1l << 30) - 2l)
+#endif
+
   // Keep the last access time unchanged
   times[0].tv_nsec = UTIME_OMIT;
 
